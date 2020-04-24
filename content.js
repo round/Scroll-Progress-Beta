@@ -20,11 +20,14 @@
 
 function scrollPercentage() {
 
-	var pageHeight = document.body.clientHeight;
+	// var pageHeight = document.body.clientHeight;
+	var body = document.body;
+	var html = document.documentElement;
+	var pageHeight = Math.max( body.scrollHeight, body.offsetHeight,
+	html.clientHeight, html.scrollHeight, html.offsetHeight );
 	var viewportHeight = window.innerHeight;
 	var scrollOffset = window.scrollY;
 	var percentage;
-
 
 	var color1 = '00FF00';
 	var color2 = 'FF0000';
@@ -40,7 +43,7 @@ function scrollPercentage() {
 
 	var color = "%23" + (hex(r) + hex(g) + hex(b));
 
-	console.log(color);
+	// console.log(color);
 
 
 
