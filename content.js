@@ -1,14 +1,19 @@
 (function() {
 	console.log('content.js loaded');
 
-	var icons = document.querySelectorAll("link[rel='shortcut icon'], link[rel='icon']");
-	var iconsArray = Array.prototype.slice.call(icons);
-	iconsArray.forEach(function(child){
-	  child.parentNode.removeChild(child);
-	});
+	function removeIcons() { //make this run once
+		var icons = document.querySelectorAll("link[rel='shortcut icon'], link[rel='icon'], link[rel='apple-touch-icon']");
+		var iconsArray = Array.prototype.slice.call(icons);
+		iconsArray.forEach(function(child){
+			child.parentNode.removeChild(child);
+		});
+	}
+
 
 	var favicon = "https://www.google.com/s2/favicons?domain=" + window.location.hostname;
 	// console.log(favicon);
+
+	var pageTitle = document.title;
 
 	function toDataURL(url, callback) { //this could probably be a canvas
 	  var xhr = new XMLHttpRequest();
@@ -34,9 +39,9 @@
   link.rel = 'icon';
 	link.type = 'image/svg';
 
-	var color1 = 'FFFFFF';
+	var color1 = 'FFFF00';
 	// var color2 = 'FF0000';
-	var color2 = 'FFFFFF';
+	var color2 = '00FFFF';
 
 
 	var hex = function(x) {
@@ -53,10 +58,14 @@
 		var ratio = scrollOffset / (pageHeight - viewportHeight);
 		var	percentage = (1 - ratio) * 100;
 
+		document.title = Math.round(ratio * 100) + '% ' + pageTitle;
+
 		var r = Math.ceil(parseInt(color1.substring(0,2), 16) * ratio + parseInt(color2.substring(0,2), 16) * (1-ratio));
 		var g = Math.ceil(parseInt(color1.substring(2,4), 16) * ratio + parseInt(color2.substring(2,4), 16) * (1-ratio));
 		var b = Math.ceil(parseInt(color1.substring(4,6), 16) * ratio + parseInt(color2.substring(4,6), 16) * (1-ratio));
 		var color = "%23" + (hex(r) + hex(g) + hex(b));
+
+		//the color causes a collision when they get to 100% or whatever, causing flicker - when all white?
 
 		if (pageHeight <= viewportHeight) {
 			// percentage = 0; //just hide the whole thing rather than default to 100
@@ -67,9 +76,11 @@
 	}
 
 	window.addEventListener('scroll', function() {
+		removeIcons();
 		scrollPercentage();
+
 	});
 
-	scrollPercentage();
+	// scrollPercentage();
 
 })();
